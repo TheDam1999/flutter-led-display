@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 class DisplayPainter extends CustomPainter {
   DisplayPainter({
-    this.pixels, this.canvasSize
+    this.pixels, this.canvasSize = 0.0
   });
 
-  List<List<Color>> pixels;
+  List<List<Color>>? pixels;
   double canvasSize;
 
   @override
@@ -22,10 +22,10 @@ class DisplayPainter extends CustomPainter {
     Paint rectPaint = Paint()..color = Colors.black;
     Paint circlePaint = Paint()..color = Colors.yellow;
 
-    for (int i = 0; i < pixels.length; i++) {
-      for (int j = 0; j < pixels[i].length; j++) {
+    for (int i = 0; i < pixels!.length; i++) {
+      for (int j = 0; j < pixels![i].length; j++) {
 
-        if (pixels[i][j].opacity < 0.3) {
+        if (pixels![i][j].opacity < 0.3) {
           continue;
         }
 
@@ -50,7 +50,7 @@ class DisplayPainter extends CustomPainter {
               j.toDouble() * rectSize  + rectSize / 2 - circleSize / 2,
             ),
             circleSize,
-            circlePaint..color = pixels[i][j]
+            circlePaint..color = pixels![i][j]
         );
       }
     }

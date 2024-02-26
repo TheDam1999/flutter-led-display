@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -9,9 +8,9 @@ const canvasSize = 100.0;
 
 class DisplaySimulator extends StatefulWidget {
   DisplaySimulator({
-    this.text,
+    this.text = "TestINIT",
     this.border = false,
-    this.debug = false
+    this.debug = true
   });
 
   final String text;
@@ -24,8 +23,8 @@ class DisplaySimulator extends StatefulWidget {
 }
 
 class _DisplaySimulatorState extends State<DisplaySimulator> {
-  ByteData imageBytes;
-  List<List<Color>> pixels;
+  ByteData? imageBytes;
+  List<List<Color>>? pixels;
 
   @override
   Widget build(BuildContext context) {
@@ -43,12 +42,14 @@ class _DisplaySimulatorState extends State<DisplaySimulator> {
   }
 
   Widget _getDebugPreview() {
+    print("dambt 3: $imageBytes  ${ widget.debug}");
+
     if (imageBytes == null || widget.debug == false) {
       return Container();
     }
 
     return Image.memory(
-      Uint8List.view(imageBytes.buffer),
+      Uint8List.view(imageBytes!.buffer),
       gaplessPlayback: true,
       filterQuality: FilterQuality.none,
       width: canvasSize,
@@ -68,11 +69,14 @@ class _DisplaySimulatorState extends State<DisplaySimulator> {
   }
 
   void _obtainPixelsFromText(String text) async {
+    print("dambt 1: $text");
     ToPixelsConversionResult result = await ToPixelsConverter.fromString(
       string: text, border: widget.border, canvasSize: canvasSize
     ).convert();
 
     setState(() {
+      print("dambt 2: ${result.imageBytes}");
+
       this.imageBytes = result.imageBytes;
       pixels = result.pixels;
     });

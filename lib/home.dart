@@ -7,11 +7,11 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  String text;
+  String? text;
 
   @override
   void initState() {
-    text = '';
+    text = 'gfgfgfdgd';
     super.initState();
   }
 
@@ -23,11 +23,11 @@ class _HomeState extends State<Home> {
         child: Column(
           children: [
             DisplaySimulator(
-              text: text,
+              text: text!,
               border: true,
               debug: false,
             ),
-            SizedBox(height: 48),
+            SizedBox(height: 18),
             _getTextField()
           ],
         )
@@ -43,6 +43,7 @@ class _HomeState extends State<Home> {
       enabledBorder: UnderlineInputBorder(borderSide: borderSide),
       focusedBorder: UnderlineInputBorder(borderSide: borderSide),
     );
+    print("dambt : start");
 
     return Container(
       width: 200,

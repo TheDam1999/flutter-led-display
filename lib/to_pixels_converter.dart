@@ -17,43 +17,41 @@ class ToPixelsConverter {
     this.canvasSize
   });
 
-  String string;
-  Canvas canvas;
-  bool border;
-  final double canvasSize;
+  String? string;
+  Canvas? canvas;
+  bool? border;
+  final double? canvasSize;
 
   Future<ToPixelsConversionResult> convert() async {
     final ui.Picture picture = TextToPictureConverter.convert(
-      text: this.string, canvasSize: canvasSize, border: border
+      text: this.string!, canvasSize: canvasSize!, border: border!
     );
-    final ByteData imageBytes = await _pictureToBytes(picture);
-    final List<List<Color>> pixels = _bytesToPixelArray(imageBytes);
+    final ByteData? imageBytes = await _pictureToBytes(picture);
+    final List<List<ui.Color>> pixels = _bytesToPixelArray(imageBytes!);
 
-    return ToPixelsConversionResult(
-      imageBytes: imageBytes,
-      pixels: pixels
+    return ToPixelsConversionResult(pixels,
+      imageBytes: imageBytes
     );
   }
 
-  Future<ByteData> _pictureToBytes(ui.Picture picture) async {
+  Future<ByteData?> _pictureToBytes(ui.Picture picture) async {
     final ui.Image img = await picture.toImage(
-      canvasSize.toInt(), canvasSize.toInt()
+      canvasSize!.toInt(), canvasSize!.toInt()
     );
     return await img.toByteData(format: ui.ImageByteFormat.png);
   }
 
   List<List<Color>> _bytesToPixelArray(ByteData imageBytes) {
-    List<int> values = imageBytes.buffer.asUint8List();
-    imagePackage.Image decodedImage = imagePackage.decodeImage(values);
+    imagePackage.Image decodedImage = imagePackage.decodeImage(imageBytes.buffer.asUint8List())!;
     List<List<Color>> pixelArray = new List.generate(
-      canvasSize.toInt(), (_) => new List(canvasSize.toInt())
+      canvasSize!.toInt(), (_) => List<Color>.filled(canvasSize!.toInt(), Colors.transparent)
     );
 
-    for (int i = 0; i < canvasSize.toInt(); i++) {
-      for (int j = 0; j < canvasSize.toInt(); j++) {
+    for (int i = 0; i < canvasSize!.toInt(); i++) {
+      for (int j = 0; j < canvasSize!.toInt(); j++) {
         int pixel = decodedImage.getPixelSafe(i, j);
         int hex = _convertColorSpace(pixel);
-        pixelArray[i][j] = Color(hex);
+        pixelArray[i][j] = ui.Color(hex);
       }
     }
 
@@ -68,11 +66,11 @@ class ToPixelsConverter {
 }
 
 class ToPixelsConversionResult {
-  ToPixelsConversionResult({
+  ToPixelsConversionResult(this.pixels,{
     this.imageBytes,
-    this.pixels
+
   });
 
-  final ByteData imageBytes;
-  final List<List<Color>> pixels;
+  final ByteData? imageBytes;
+  final List<List<ui.Color>> pixels;
 }
